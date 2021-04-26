@@ -51,7 +51,7 @@
     <body>
         <p>
             Press the button to activate audio.<br>
-            Inputs will be connected directly to outputs, beware of audio feedback loops.
+            Inputs will be sent over a web socket, which in turn is used as jack audio output.
         </p>
         <button id="start" onclick="start()">Start audio</button>
     </body>
