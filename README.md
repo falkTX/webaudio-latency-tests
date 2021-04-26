@@ -79,7 +79,7 @@ To run this test, build the C code from this project (a simple `make` will suffi
 Then you can open http://localhost:8021/ in a browser.
 
 Worth noting that by having the websocket webserver in python, things are not exactly as fast as they could be.  
-But as long we the code is able to fetch data and transmit it to the JACK/C side in the buffer size time, we are mostly okay.
+But as long as the webserver is able to fetch data and transmit it to the JACK/C side in the buffer size time, we are mostly okay.
 
 ### Firefox JACK backend with websocket into JACK
 
