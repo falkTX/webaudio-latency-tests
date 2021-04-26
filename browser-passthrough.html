@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+    <head>
+        <meta charset="UTF-8">
+        <title>Input to Output testing</title>
+        <style>
+            body {
+                background: #333;
+                color: #ccc;
+            }
+        </style>
+        <script>
+            function start() {
+                var constraints = {
+                    audio: {
+                        autoGainControl: false,
+                        channelCount: 1,
+                        echoCancellation: false,
+                        noiseSuppression: false,
+                        volume: 1.0,
+                        sampleRate: 48000,
+                        sampleSize: 16,
+                        mozAutoGainControl: false,
+                        mozNoiseSuppression: false,
+                    },
+                    video: false,
+                };
+                navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+                    console.log("navigator.mediaDevices.getUserMedia =>", stream)
+                    var audio = new AudioContext();
+                    var source = audio.createMediaStreamSource(stream);
+                    source.connect(audio.destination);
+                });
+            };
+        </script>
+    </head>
+    <body>
+        <p>
+            Press the button to activate audio.<br>
+            Inputs will be connected directly to outputs, beware of audio feedback loops.
+        </p>
+        <button id="start" onclick="start()">Start audio</button>
+    </body>
+</html>

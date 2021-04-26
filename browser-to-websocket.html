@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+    <head>
+        <meta charset="UTF-8">
+        <title>Input to WebSocket testing</title>
+        <style>
+            body {
+                background: #333;
+                color: #ccc;
+            }
+        </style>
+        <script>
+            function start() {
+                var bufferSize = 4096;
+                var sampleRate = 48000;
+                var constraints = {
+                    audio: {
+                        autoGainControl: false,
+                        channelCount: 1,
+                        echoCancellation: false,
+                        noiseSuppression: false,
+                        volume: 1.0,
+                        sampleRate: sampleRate,
+                        sampleSize: 16,
+                        mozAutoGainControl: false,
+                        mozNoiseSuppression: false,
+                    },
+                    video: false,
+                };
+                var ws = new WebSocket("ws://" + window.location.host + "/websocket");
+
+                ws.onmessage = function (e) {
+                    console.log("onmessage", e);
+                }
+                ws.onopen = function (e) {
+                    navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+                        console.log("navigator.mediaDevices.getUserMedia =>", stream)
+                        var audio = new AudioContext();
+                        var source = audio.createMediaStreamSource(stream);
+                        var recorder = audio.createScriptProcessor(bufferSize, 1, 1);
+                        recorder.onaudioprocess = function(e) {
+                            ws.send(e.inputBuffer.getChannelData(0));
+                        };
+                        source.connect(recorder);
+                        recorder.connect(audio.destination);
+                    });
+                };
+            };
+        </script>
+    </head>
+    <body>
+        <p>
+            Press the button to activate audio.<br>
+            Inputs will be connected directly to outputs, beware of audio feedback loops.
+        </p>
+        <button id="start" onclick="start()">Start audio</button>
+    </body>
+</html>
